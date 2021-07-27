@@ -150,14 +150,16 @@ class Server
 		    }
 		    fclose($handle);
 			unlink($this-> log_file);
+			$data = "";
 		    foreach ($lines as $line) {
 		    	if($i < ($j++ + $this-> n_logs_keep)){
-		    		file_put_contents($this-> log_file, $line.PHP_EOL , FILE_APPEND | LOCK_EX);
+		    		$data .= $line.PHP_EOL;
 		    		continue;
 		    	}
 		    	$dir = $this-> dir_logs.$line;
 		        Helpers::removeDirectory($dir);
 		    }
+		    file_put_contents($this-> log_file, $data);
 		} else {
 		    // error opening the file.
 		} 
