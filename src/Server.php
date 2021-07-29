@@ -36,9 +36,6 @@ class Server
 	// temp_block_type(string) is temp block_type
 	public $temp_block_type		= 'All';
 
-	// flag(bool) check was runned
-	private $flag				= false;
-
 	// onSuspend(function) callback when suspended
 	private $onSuspend;
 
@@ -128,12 +125,12 @@ class Server
 	}
 
 	private function updateRequestCount($filename, $n_requests){
-		if($n_requests == 0 && $this-> auto_remove_log && !$this-> flag){
-			$this-> flag = true;
+		$dir_logs = $this-> dir_logs.$filename[1].'/';
+		if(!file_exists($dir_logs) && $this-> auto_remove_log){
 			$this-> removeLog($filename[1]);
 			file_put_contents($this-> log_file, $filename[1].PHP_EOL , FILE_APPEND | LOCK_EX);
 		}
-		$this-> createDir($this-> dir_logs.$filename[1].'/');
+		$this-> createDir($dir_logs);
 		file_put_contents($filename[0], json_encode(['requests'=> $n_requests]));
 	}
 
